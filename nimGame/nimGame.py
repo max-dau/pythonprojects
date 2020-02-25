@@ -1,4 +1,6 @@
-rows = [1, 2, 5, 7]
+from time import sleep
+
+rows = [1, 3, 5, 7]
 groups = [
     [],
     [],
@@ -11,8 +13,8 @@ groups = [
 def userChoice():
     while True:
         global rowChoice
-        rowChoice = int(input('Out of which row would you like to take a match? (input number)\n'))
-        if rowChoice > 4 or rowChoice <= 0:
+        rowChoice = int(input('Out of which row would you like to take a match? (input number)\n')) - 1
+        if rowChoice > 3 or rowChoice < 0:
             print('There only are 4 rows. Choose another one.')
         elif rows[rowChoice-1] == 0:
             print('There\'s nothing in this row. Choose another one.')
@@ -33,14 +35,15 @@ def userChoice():
 #in order to "balance" the board. a balanced board is a board, which always has
 def computerChoice():
     filledRows = []
+    row = 0
     for i in rows:
-        if rows[i] > 0:
+        if i > 0:
             filledRows.append(i)
-    if len(filledRows) == 2:
-        if rows[filledRows[0]] == 1:
-            amount = rows[filledRows[1]]
-        elif rows[filledRows[1]] == 1:
-            amount = rows[filledRows[0]]
+        row += 1
+    if len(filledRows) == 2 and rows[filledRows[0]] == 1:
+        amount = rows[filledRows[1]]
+    elif len(filledRows) == 2 and rows[filledRows[1]] == 1:
+        amount = rows[filledRows[0]]
     else:
         index = 0
         for i in rows:
@@ -58,31 +61,39 @@ def computerChoice():
             index += 1
 
 #checks the balance of the board and chooses amount and row based on it
-        if groups.count(4) % 2 != 0:
+        if sum(x.count(4) for x in groups) % 2 != 0:
+            row = 0
             for i in rows:
-                if rows[i] >= 4:
-                    i = rowChoice
+                if 4 in groups[row]:
+                    rowChoice = row
                     amount = 4
-                i += 1
-        elif groups.count(2) % 2 != 0:
+                    break
+                row += 1
+        elif sum(x.count(2) for x in groups) % 2 != 0:
+            row = 0
             for i in rows:
-                if rows[i] >= 2:
-                    i = rowChoice
+                if 2 in groups[row]:
+                    rowChoice = row
                     amount = 2
-                i += 1
-        elif groups.count(1) % 2 != 0:
+                    break
+                row += 1
+        elif sum(x.count(1) for x in groups) % 2 != 0:
+            row = 0
             for i in rows:
-                if rows[i] >= 1:
-                    i = rowChoice
+                if 1 in groups[row]:
+                    print('row: ' + str(row))
+                    rowChoice = row
+                    print('rowChoice:' + str(rowChoice))
                     amount = 1
-                i += 1
-
+                    break
+                row += 1
 
 def updateRows():
-    rows[rowChoice-1] -= amount
+    print('new amount: ' + str(rows[rowChoice] - amount) + '\nin row ' + str(rowChoice))
+    rows[rowChoice] -= amount
 
 #prints the entire board.
-def printboard():
+def printBoard():
     print('This is the board right now.')
     row = 0
     while row <= 3:
@@ -95,19 +106,21 @@ def printboard():
 def checkWin():
     empty = 0
     for i in rows:
-        if rows[i] == 0:
+        if i == 0:
             empty += 1
-    if emtpy == 4:
+    if empty == 4:
         return True
 
 while True:
-    printboard()
-    computerChoice()
+    printBoard()
+    userChoice()
     updateRows()
     if checkWin() == True:
         print('The computer has won.')
         break
-    playerChoice()
+    printBoard()
+    sleep(1.5)
+    computerChoice()
     updateRows()
     if checkWin() == True:
         print('The computer has won.')
