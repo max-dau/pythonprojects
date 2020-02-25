@@ -35,9 +35,12 @@ def computerChoice():
     filledRows = []
     for i in rows:
         if rows[i] > 0:
-            filledRows.append(rows[i])
-    if filledRows <= 2 and :
-        #figure out what to do
+            filledRows.append(i)
+    if len(filledRows) == 2:
+        if rows[filledRows[0]] == 1:
+            amount = rows[filledRows[1]]
+        elif rows[filledRows[1]] == 1:
+            amount = rows[filledRows[0]]
     else:
         index = 0
         for i in rows:
@@ -55,19 +58,19 @@ def computerChoice():
             index += 1
 
 #checks the balance of the board and chooses amount and row based on it
-        if groups.count(4) % 2 not == 0:
+        if groups.count(4) % 2 != 0:
             for i in rows:
                 if rows[i] >= 4:
                     i = rowChoice
                     amount = 4
                 i += 1
-        elif groups.count(2) % 2 not == 0:
+        elif groups.count(2) % 2 != 0:
             for i in rows:
                 if rows[i] >= 2:
                     i = rowChoice
                     amount = 2
                 i += 1
-        elif groups.count(1) % 2 not == 0:
+        elif groups.count(1) % 2 != 0:
             for i in rows:
                 if rows[i] >= 1:
                     i = rowChoice
@@ -88,3 +91,24 @@ def printboard():
             outputLine += 'I '
         print(outputLine)
         row += 1
+
+def checkWin():
+    empty = 0
+    for i in rows:
+        if rows[i] == 0:
+            empty += 1
+    if emtpy == 4:
+        return True
+
+while True:
+    printboard()
+    computerChoice()
+    updateRows()
+    if checkWin() == True:
+        print('The computer has won.')
+        break
+    playerChoice()
+    updateRows()
+    if checkWin() == True:
+        print('The computer has won.')
+        break
