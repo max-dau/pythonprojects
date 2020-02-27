@@ -100,7 +100,7 @@ def printBoard():
     sleep(0.5)
     row = 0
     while row <= 3:
-        outputLine = ''
+        outputLine = str(row + 1) + '  '
         for i in range(0, rows[row]):
             outputLine += 'I '
         print(outputLine)
