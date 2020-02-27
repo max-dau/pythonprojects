@@ -114,7 +114,6 @@ def checkWin():
     if empty == 4:
         return True
 
-
 printBoard()
 while True:
     userChoice()
