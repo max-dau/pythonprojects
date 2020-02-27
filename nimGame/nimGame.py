@@ -32,16 +32,22 @@ def computerChoice():
     global computerRow
     filledRows = []
     i = 0
-    while i < len(rows):
-        if i > 0:
+    while i < 4:
+        if rows[i] > 0:
             filledRows.append(i)
         i += 1
     if len(filledRows) == 2 and rows[filledRows[0]] == 1:
-        print('END')
         computerAmount = rows[filledRows[1]]
+        computerRow = filledRows[1]
     elif len(filledRows) == 2 and rows[filledRows[1]] == 1:
-        print('END')
         computerAmount = rows[filledRows[0]]
+        computerRow = filledRows[0]
+    elif len(filledRows) == 1:
+        if rows[filledRows[0]] == 1:
+            computerAmount = 1
+        else:
+            computerAmount = filledRows[0] - 1
+        computerRow = filledRows[0]
     else:
         groups = [
             [],
@@ -62,7 +68,6 @@ def computerChoice():
                     groups[i].append(1)
                     matches -= 1
             i += 1
-        print('groups: ' + str(groups))
 #checks the balance of the board and chooses amount and row based on it
         computerAmount = 0
         if sum(x.count(4) for x in groups) % 2 != 0:
@@ -78,10 +83,21 @@ def computerChoice():
                 computerRow = i
                 break
             i += 1
+        else:
+#find biggest row and empty it if balancing is impossible
+            biggestRow = 0
+            for row in rows:
+                if rows[biggestRow] < row:
+                    biggestRow = rows.index(row)
+            computerRow = biggestRow
+            computerAmount = rows[biggestRow]
+    print('\nThe computer takes ' + str(computerAmount) + ' matches out of row ' + str(computerRow + 1) + '\n')
+    sleep(0.5)
 
 #prints the entire board.
 def printBoard():
-    print('This is the board right now.')
+    print('This is the board right now:')
+    sleep(0.5)
     row = 0
     while row <= 3:
         outputLine = ''
@@ -98,17 +114,19 @@ def checkWin():
     if empty == 4:
         return True
 
+
+printBoard()
 while True:
-    printBoard()
     userChoice()
     rows[userRow] -= userAmount
+    printBoard()
     if checkWin() == True:
         print('The computer has won.')
         break
-    printBoard()
     sleep(1)
     computerChoice()
     rows[computerRow] -= computerAmount
+    printBoard()
     if checkWin() == True:
         print('The user has won.')
         break
